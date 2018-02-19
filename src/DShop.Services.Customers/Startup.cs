@@ -2,8 +2,9 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using DShop.Common.Bus.RabbitMq;
+using DShop.Common.Mongo;
 using DShop.Common.Mvc;
+using DShop.Common.RabbitMq;
 using DShop.Messages.Events.Identity;
 using DShop.Messages.Events.Products;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +32,7 @@ namespace DShop.Services.Customers
                     .AsImplementedInterfaces();
             builder.Populate(services);
             builder.AddRabbitMq();
-            //builder.AddMongoDB();
+            builder.AddMongoDB();
             Container = builder.Build();
 
             return new AutofacServiceProvider(Container);
@@ -44,11 +45,9 @@ namespace DShop.Services.Customers
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseMvc();
             app.UseRabbitMq()
                 .SubscribeEvent<SignedUp>();
-
             applicationLifetime.ApplicationStopped.Register(() => Container.Dispose());
         }
     }
