@@ -21,7 +21,8 @@ namespace DShop.Services.Customers.Handlers
 
         public async Task HandleAsync(SignedUp @event, ICorrelationContext context)
         {
-            await _customerService.AddAsync(@event.UserId, @event.Email);
+            await _customerService.AddAsync(@event.UserId, @event.Email, 
+                @event.FirstName, @event.LastName, @event.Address);
             await _busPublisher.PublishEventAsync(new CustomerCreated(@event.RequestId, @event.UserId));
         }
     }

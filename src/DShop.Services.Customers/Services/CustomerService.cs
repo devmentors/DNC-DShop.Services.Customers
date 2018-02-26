@@ -30,10 +30,8 @@ namespace DShop.Services.Customers.Services
             };
         }
 
-        public async Task AddAsync(Guid id, string email)
-        {
-            var customer = new Customer(id, email, null, null, null);
-            await _customerRepository.AddAsync(customer);
-        }
+        public async Task AddAsync(Guid id, string email, 
+            string firstName, string lastName, string address)
+            => await _customerRepository.AddAsync(new Customer(id, email, firstName, lastName, address));
     }
 }
