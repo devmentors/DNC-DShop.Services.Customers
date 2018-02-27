@@ -1,8 +1,9 @@
 using System;
+using DShop.Messages.Entities;
 
 namespace DShop.Services.Customers.Domain
 {
-    public class Customer
+    public class Customer : IIdentifiable
     {
         public Guid Id { get; protected set; }
         public string Email { get; protected set; }
