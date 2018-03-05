@@ -7,6 +7,7 @@ namespace DShop.Services.Customers.Services
     public interface ICustomerService
     {
         Task<CustomerDto> GetAsync(Guid id);
-        Task AddAsync(Guid id, string email, string firstName, string lastName, string address);
+        Task AddAsync(Guid id, string email);
+        Task CompleteAsync(Guid id, string firstName, string lastName, string address, string country);
     }
 }

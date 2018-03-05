@@ -8,5 +8,6 @@ namespace DShop.Services.Customers.Repositories
     {
         Task<Customer> GetAsync(Guid id);
         Task AddAsync(Customer customer);
+        Task UpdateAsync(Customer customer);
     }
 }

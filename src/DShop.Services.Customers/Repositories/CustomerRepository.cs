@@ -21,5 +21,8 @@ namespace DShop.Services.Customers.Repositories
 
         public async Task AddAsync(Customer customer)
             => await _repository.CreateAsync(customer);
+
+        public async Task UpdateAsync(Customer customer)
+            => await _repository.UpdateAsync(customer);
     }
 }

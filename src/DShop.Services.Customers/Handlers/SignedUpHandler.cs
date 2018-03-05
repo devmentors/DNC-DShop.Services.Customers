@@ -9,21 +9,16 @@ namespace DShop.Services.Customers.Handlers
 {
     public class SignedUpHandler : IEventHandler<SignedUp>
     {
-        private readonly IBusPublisher _busPublisher;
         private readonly ICustomerService _customerService;
 
-        public SignedUpHandler(IBusPublisher busPublisher,
-            ICustomerService customerService)
+        public SignedUpHandler(ICustomerService customerService)
         {
-            _busPublisher = busPublisher;
             _customerService = customerService;
         }
 
         public async Task HandleAsync(SignedUp @event, ICorrelationContext context)
         {
-            await _customerService.AddAsync(@event.UserId, @event.Email, 
-                @event.FirstName, @event.LastName, @event.Address);
-            await _busPublisher.PublishEventAsync(new CustomerCreated(@event.RequestId, @event.UserId));
+            await _customerService.AddAsync(@event.UserId, @event.Email);
         }
     }
 }

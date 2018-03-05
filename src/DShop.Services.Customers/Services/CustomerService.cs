@@ -26,12 +26,19 @@ namespace DShop.Services.Customers.Services
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 Address = customer.Address,
+                Country = customer.Country,
                 CreatedAt = customer.CreatedAt
             };
         }
 
-        public async Task AddAsync(Guid id, string email, 
-            string firstName, string lastName, string address)
-            => await _customerRepository.AddAsync(new Customer(id, email, firstName, lastName, address));
+        public async Task AddAsync(Guid id, string email)
+            => await _customerRepository.AddAsync(new Customer(id, email));
+
+        public async Task CompleteAsync(Guid id, string firstName, string lastName, string address, string country)
+        {
+            var customer = await _customerRepository.GetAsync(id);
+            customer.Complete(firstName, lastName, address, country);
+            await _customerRepository.UpdateAsync(customer);
+        }
     }
 }
