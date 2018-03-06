@@ -7,11 +7,11 @@ using DShop.Services.Customers.Repositories;
 
 namespace DShop.Services.Customers.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomersService : ICustomersService
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomersRepository _customerRepository;
         
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomersService(ICustomersRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }

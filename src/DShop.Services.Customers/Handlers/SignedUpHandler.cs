@@ -9,9 +9,9 @@ namespace DShop.Services.Customers.Handlers
 {
     public class SignedUpHandler : IEventHandler<SignedUp>
     {
-        private readonly ICustomerService _customerService;
+        private readonly ICustomersService _customerService;
 
-        public SignedUpHandler(ICustomerService customerService)
+        public SignedUpHandler(ICustomersService customerService)
         {
             _customerService = customerService;
         }

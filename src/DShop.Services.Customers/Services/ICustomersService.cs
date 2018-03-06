@@ -4,7 +4,7 @@ using DShop.Services.Customers.Dtos;
 
 namespace DShop.Services.Customers.Services
 {
-    public interface ICustomerService
+    public interface ICustomersService
     {
         Task<CustomerDto> GetAsync(Guid id);
         Task AddAsync(Guid id, string email);

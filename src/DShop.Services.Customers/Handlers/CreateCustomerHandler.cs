@@ -10,10 +10,10 @@ namespace DShop.Services.Customers.Handlers
     public class CreateCustomerHandler : ICommandHandler<CreateCustomer>
     {
         private readonly IBusPublisher _busPublisher;
-        private readonly ICustomerService _customerService;
+        private readonly ICustomersService _customerService;
 
         public CreateCustomerHandler(IBusPublisher busPublisher,
-            ICustomerService customerService)
+            ICustomersService customerService)
         {
             _busPublisher = busPublisher;
             _customerService = customerService;

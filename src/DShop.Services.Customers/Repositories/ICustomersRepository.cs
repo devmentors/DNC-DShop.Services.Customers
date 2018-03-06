@@ -4,7 +4,7 @@ using DShop.Services.Customers.Domain;
 
 namespace DShop.Services.Customers.Repositories
 {
-    public interface ICustomerRepository
+    public interface ICustomersRepository
     {
         Task<Customer> GetAsync(Guid id);
         Task AddAsync(Customer customer);

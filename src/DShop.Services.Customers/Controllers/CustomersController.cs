@@ -8,9 +8,9 @@ namespace DShop.Services.Customers.Controllers
     [Route("[controller]")]
     public class CustomersController : Controller
     {
-        private readonly ICustomerService _customerService;
+        private readonly ICustomersService _customerService;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomersService customerService)
         {
             _customerService = customerService;
         }

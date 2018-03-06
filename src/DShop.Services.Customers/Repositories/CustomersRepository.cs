@@ -7,11 +7,11 @@ using MongoDB.Driver.Linq;
 
 namespace DShop.Services.Customers.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomersRepository : ICustomersRepository
     {
         private readonly IMongoRepository<Customer> _repository;
         
-        public CustomerRepository(IMongoRepository<Customer> repository)
+        public CustomersRepository(IMongoRepository<Customer> repository)
         {
             _repository = repository;
         }
