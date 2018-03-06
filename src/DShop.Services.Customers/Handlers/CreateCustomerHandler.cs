@@ -21,9 +21,9 @@ namespace DShop.Services.Customers.Handlers
 
         public async Task HandleAsync(CreateCustomer command, ICorrelationContext context)
         {
-            await _customerService.CompleteAsync(command.UserId, 
+            await _customerService.CompleteAsync(context.UserId, 
                 command.FirstName, command.LastName, command.Address, command.Country);
-            await _busPublisher.PublishEventAsync(new CustomerCreated(command.UserId));
+            await _busPublisher.PublishEventAsync(new CustomerCreated(context.UserId));
         }        
     }
 }

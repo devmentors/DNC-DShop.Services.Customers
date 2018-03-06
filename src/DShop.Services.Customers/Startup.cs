@@ -5,6 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using DShop.Common.Mongo;
 using DShop.Common.Mvc;
 using DShop.Common.RabbitMq;
+using DShop.Messages.Commands.Customers;
 using DShop.Messages.Events.Identity;
 using DShop.Messages.Events.Products;
 using DShop.Services.Customers.Domain;
@@ -49,6 +50,7 @@ namespace DShop.Services.Customers
             }
             app.UseMvc();
             app.UseRabbitMq()
+                .SubscribeCommand<CreateCustomer>()
                 .SubscribeEvent<SignedUp>();
             applicationLifetime.ApplicationStopped.Register(() => Container.Dispose());
         }
