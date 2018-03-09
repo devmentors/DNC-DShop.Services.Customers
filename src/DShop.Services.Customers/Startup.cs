@@ -49,6 +49,7 @@ namespace DShop.Services.Customers
                 app.UseDeveloperExceptionPage();
             }
             app.UseMvc();
+            app.UseErrorHandler();
             app.UseRabbitMq()
                 .SubscribeCommand<CreateCustomer>()
                 .SubscribeEvent<SignedUp>();
