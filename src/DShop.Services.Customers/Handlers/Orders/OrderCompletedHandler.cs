@@ -26,7 +26,7 @@ namespace DShop.Services.Customers.Handlers.Products
             => await _handler.Handle(async () => 
             {
                 var order = await _ordersApi.GetAsync(@event.Id);
-                await _cartService.ClearAsync(order.UserId);
+                await _cartService.ClearAsync(order.CustomerId);
             })
             .ExecuteAsync();
     }
