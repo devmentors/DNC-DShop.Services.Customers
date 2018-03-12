@@ -7,7 +7,7 @@ namespace DShop.Services.Customers.Repositories
     public interface ICustomersRepository
     {
         Task<Customer> GetAsync(Guid id);
-        Task AddAsync(Customer customer);
+        Task CreateAsync(Customer customer);
         Task UpdateAsync(Customer customer);
     }
 }

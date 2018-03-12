@@ -5,10 +5,13 @@ using Autofac.Extensions.DependencyInjection;
 using DShop.Common.Mongo;
 using DShop.Common.Mvc;
 using DShop.Common.RabbitMq;
+using DShop.Common.RestEase;
 using DShop.Messages.Commands.Customers;
 using DShop.Messages.Events.Identity;
+using DShop.Messages.Events.Orders;
 using DShop.Messages.Events.Products;
 using DShop.Services.Customers.Domain;
+using DShop.Services.Customers.ServiceForwarders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +39,7 @@ namespace DShop.Services.Customers
             builder.AddRabbitMq();
             builder.AddMongoDB();
             builder.AddMongoDBRepository<Customer>("Customers");
+            builder.RegisterServiceForwarder<IProductsApi>("products-service");
             Container = builder.Build();
 
             return new AutofacServiceProvider(Container);
@@ -52,6 +56,12 @@ namespace DShop.Services.Customers
             app.UseErrorHandler();
             app.UseRabbitMq()
                 .SubscribeCommand<CreateCustomer>()
+                .SubscribeCommand<AddProductToCart>()
+                .SubscribeCommand<DeleteProductFromCart>()
+                .SubscribeEvent<OrderCompleted>()
+                .SubscribeEvent<ProductCreated>()
+                .SubscribeEvent<ProductUpdated>()
+                .SubscribeEvent<ProductDeleted>()
                 .SubscribeEvent<SignedUp>();
             applicationLifetime.ApplicationStopped.Register(() => Container.Dispose());
         }

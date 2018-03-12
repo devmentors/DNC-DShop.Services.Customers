@@ -19,7 +19,7 @@ namespace DShop.Services.Customers.Repositories
         public async Task<Customer> GetAsync(Guid id)
             => await _repository.GetAsync(id);
 
-        public async Task AddAsync(Customer customer)
+        public async Task CreateAsync(Customer customer)
             => await _repository.CreateAsync(customer);
 
         public async Task UpdateAsync(Customer customer)
