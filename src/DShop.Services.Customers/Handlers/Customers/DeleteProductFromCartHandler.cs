@@ -23,7 +23,11 @@ namespace DShop.Services.Customers.Handlers.Customers
 
         public async Task HandleAsync(DeleteProductFromCart command, ICorrelationContext context)
             => await _handler.Handle(async () => 
-                await _cartService.DeleteProductAsync(context.UserId, command.ProductId))
+                {
+                    await _cartService.DeleteProductAsync(context.UserId, command.ProductId);
+                    await _busPublisher.PublishEventAsync(new ProductDeletedFromCart(context.UserId,
+                        command.ProductId), context);
+                })
                 .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
                         new DeleteProductFromCartRejected(context.UserId, command.ProductId,
                             ex.Message, ex.Code), context)

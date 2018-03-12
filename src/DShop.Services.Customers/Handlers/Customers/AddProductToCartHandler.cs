@@ -23,7 +23,11 @@ namespace DShop.Services.Customers.Handlers.Customers
 
         public async Task HandleAsync(AddProductToCart command, ICorrelationContext context)
             => await _handler.Handle(async () => 
-                await _cartService.AddProductAsync(context.UserId, command.ProductId, command.Quantity))
+                {
+                    await _cartService.AddProductAsync(context.UserId, command.ProductId, command.Quantity);
+                    await _busPublisher.PublishEventAsync(new ProductAddedToCart(context.UserId,
+                        command.ProductId, command.Quantity), context);
+                })
                 .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
                         new AddProductToCartRejected(context.UserId, command.ProductId,
                             command.Quantity, ex.Message, ex.Code), context)
