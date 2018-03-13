@@ -11,7 +11,7 @@ namespace DShop.Services.Customers.Repositories
     {
         private readonly IMongoRepository<Cart> _repository;
         
-        public CartsRepository(MongoRepository<Cart> repository)
+        public CartsRepository(IMongoRepository<Cart> repository)
         {
             _repository = repository;
         }

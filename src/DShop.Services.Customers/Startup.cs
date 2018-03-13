@@ -38,7 +38,9 @@ namespace DShop.Services.Customers
             builder.Populate(services);
             builder.AddRabbitMq();
             builder.AddMongoDB();
+            builder.AddMongoDBRepository<Cart>("Carts");
             builder.AddMongoDBRepository<Customer>("Customers");
+            builder.AddMongoDBRepository<Product>("Products");
             builder.RegisterServiceForwarder<IProductsApi>("products-service");
             builder.RegisterServiceForwarder<IOrdersApi>("orders-service");
             Container = builder.Build();
@@ -59,11 +61,12 @@ namespace DShop.Services.Customers
                 .SubscribeCommand<CreateCustomer>()
                 .SubscribeCommand<AddProductToCart>()
                 .SubscribeCommand<DeleteProductFromCart>()
-                .SubscribeEvent<OrderCompleted>()
+                .SubscribeCommand<ClearCart>()
+                .SubscribeEvent<SignedUp>()
                 .SubscribeEvent<ProductCreated>()
                 .SubscribeEvent<ProductUpdated>()
                 .SubscribeEvent<ProductDeleted>()
-                .SubscribeEvent<SignedUp>();
+                .SubscribeEvent<OrderCompleted>();
             applicationLifetime.ApplicationStopped.Register(() => Container.Dispose());
         }
     }

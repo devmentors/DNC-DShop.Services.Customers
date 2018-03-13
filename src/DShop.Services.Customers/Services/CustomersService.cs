@@ -44,7 +44,7 @@ namespace DShop.Services.Customers.Services
             var customer = await _customerRepository.GetAsync(id);
             if (customer.Completed)
             {
-                throw new DShopException("customer_already_completed", 
+                throw new DShopException(Codes.CustomerAlreadyCompleted, 
                     $"Customer account was already completed for user: '{id}'.");
             }
             customer.Complete(firstName, lastName, address, country);
