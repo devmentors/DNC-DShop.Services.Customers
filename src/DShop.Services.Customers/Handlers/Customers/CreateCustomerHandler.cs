@@ -27,18 +27,15 @@ namespace DShop.Services.Customers.Handlers.Customers
         public async Task HandleAsync(CreateCustomer command, ICorrelationContext context)
             => await _handler.Handle(async () => 
                 {
-                    await _customerService.CompleteAsync(context.UserId, 
-                        command.FirstName, command.LastName, command.Address, command.Country);
-                    await _busPublisher.PublishEventAsync(new CustomerCreated(context.UserId),
-                        context);
+                    await _customerService.CompleteAsync(command.Id, command.FirstName, 
+                        command.LastName, command.Address, command.Country);
+                    await _busPublisher.PublishEventAsync(new CustomerCreated(command.Id), context);
                 })
                 .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
-                        new CreateCustomerRejected(context.UserId, ex.Message, ex.Code), 
-                            context)
+                        new CreateCustomerRejected(command.Id, ex.Message, ex.Code), context)
                 )    
                 .OnError(async ex => await _busPublisher.PublishEventAsync(
-                        new CreateCustomerRejected(context.UserId, ex.Message, string.Empty), 
-                            context)
+                        new CreateCustomerRejected(command.Id, ex.Message, string.Empty), context)
                 )
                 .ExecuteAsync();
     }

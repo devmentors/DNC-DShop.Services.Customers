@@ -24,14 +24,14 @@ namespace DShop.Services.Customers.Handlers.Customers
         public async Task HandleAsync(ClearCart command, ICorrelationContext context)
             => await _handler.Handle(async () => 
                 {
-                    await _cartService.ClearAsync(context.UserId);
-                    await _busPublisher.PublishEventAsync(new CartCleared(context.UserId), context);
+                    await _cartService.ClearAsync(command.CustomerId);
+                    await _busPublisher.PublishEventAsync(new CartCleared(command.CustomerId), context);
                 })
                 .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
-                        new ClearCartRejected(context.UserId, ex.Message, ex.Code), context)
+                        new ClearCartRejected(command.CustomerId, ex.Message, ex.Code), context)
                 )    
                 .OnError(async ex => await _busPublisher.PublishEventAsync(
-                        new ClearCartRejected(context.UserId, ex.Message, string.Empty), context)
+                        new ClearCartRejected(command.CustomerId, ex.Message, string.Empty), context)
                 )
                 .ExecuteAsync();
     }
