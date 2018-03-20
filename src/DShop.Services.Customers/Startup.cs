@@ -42,7 +42,6 @@ namespace DShop.Services.Customers
             builder.AddMongoDBRepository<Customer>("Customers");
             builder.AddMongoDBRepository<Product>("Products");
             builder.RegisterServiceForwarder<IProductsApi>("products-service");
-            builder.RegisterServiceForwarder<IOrdersApi>("orders-service");
             Container = builder.Build();
 
             return new AutofacServiceProvider(Container);
