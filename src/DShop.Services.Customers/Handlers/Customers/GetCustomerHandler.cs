@@ -17,7 +17,6 @@ namespace DShop.Services.Customers.Handlers.Customers
 
         public async Task<CustomerDto> HandleAsync(GetCustomer query)
         {
-            System.Console.WriteLine("ID: " + query.Id);
             var customer = await _customersRepository.GetAsync(query.Id);
 
             return customer == null ? null : new CustomerDto
