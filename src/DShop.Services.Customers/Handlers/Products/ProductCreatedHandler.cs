@@ -2,31 +2,36 @@ using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
 using DShop.Messages.Events.Products;
+using DShop.Services.Customers.Domain;
+using DShop.Services.Customers.Repositories;
 using DShop.Services.Customers.ServiceForwarders;
-using DShop.Services.Customers.Services;
 
 namespace DShop.Services.Customers.Handlers.Products
 {
     public class ProductCreatedHandler : IEventHandler<ProductCreated>
     {
         private readonly IHandler _handler;
-        private readonly IProductsService _productsService;
         private readonly IProductsApi _productsApi;
+        private readonly ICartsRepository _cartsRepository;
+        private readonly IProductsRepository _productsRepository;
 
         public ProductCreatedHandler(IHandler handler, 
-            IProductsService productsService,
-            IProductsApi productsApi)
+            IProductsApi productsApi, 
+            ICartsRepository cartsRepository,
+            IProductsRepository productsRepository)
         {
             _handler = handler;
-            _productsService = productsService;
             _productsApi = productsApi;
+            _cartsRepository = cartsRepository;
+            _productsRepository = productsRepository;
         }
 
         public async Task HandleAsync(ProductCreated @event, ICorrelationContext context)
             => await _handler.Handle(async () => 
             {
-                var product = await _productsApi.GetAsync(@event.Id);
-                await _productsService.CreateAsync(product.Id, product.Name, product.Price);
+                var productDto = await _productsApi.GetAsync(@event.Id);
+                var product = new Product(productDto.Id, productDto.Name, productDto.Price);
+                await _productsRepository.CreateAsync(product);
             })
             .ExecuteAsync();
     }

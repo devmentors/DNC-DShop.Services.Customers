@@ -1,22 +1,20 @@
 using System;
 using System.Threading.Tasks;
-using DShop.Services.Customers.Services;
+using DShop.Common.Dispatchers;
+using DShop.Services.Customers.Dtos;
+using DShop.Services.Customers.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DShop.Services.Customers.Controllers
 {
-    [Route("[controller]")]
-    public class CartsController : Controller
+    public class CartsController : BaseController
     {
-        private readonly ICartService _cartService;
-
-        public CartsController(ICartService cartService)
+        public CartsController(IDispatcher dispatcher) : base(dispatcher)
         {
-            _cartService = cartService;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-            => Ok(await _cartService.GetAsync(id));
+        public async Task<ActionResult<CartDto>> Get([FromRoute] GetCart query)
+            => Single(await DispatchAsync<GetCart, CartDto>(query));
     }
 }

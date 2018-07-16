@@ -1,22 +1,20 @@
 using System;
 using System.Threading.Tasks;
-using DShop.Services.Customers.Services;
+using DShop.Common.Dispatchers;
+using DShop.Services.Customers.Dtos;
+using DShop.Services.Customers.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DShop.Services.Customers.Controllers
 {
-    [Route("[controller]")]
-    public class CustomersController : Controller
+    public class CustomersController : BaseController
     {
-        private readonly ICustomersService _customerService;
-
-        public CustomersController(ICustomersService customerService)
+        public CustomersController(IDispatcher dispatcher) : base(dispatcher)
         {
-            _customerService = customerService;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-            => Ok(await _customerService.GetAsync(id));
+        public async Task<ActionResult<CustomerDto>> Get([FromRoute] GetCustomer query)
+            => Single(await DispatchAsync<GetCustomer, CustomerDto>(query));
     }
 }

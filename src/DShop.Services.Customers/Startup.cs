@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DShop.Common.Dispatchers;
 using DShop.Common.Mongo;
 using DShop.Common.Mvc;
 using DShop.Common.RabbitMq;
@@ -36,6 +37,7 @@ namespace DShop.Services.Customers
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
                     .AsImplementedInterfaces();
             builder.Populate(services);
+            builder.AddDispatchers();
             builder.AddRabbitMq();
             builder.AddMongoDB();
             builder.AddMongoDBRepository<Cart>("Carts");

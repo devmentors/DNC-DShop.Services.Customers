@@ -2,35 +2,39 @@ using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
 using DShop.Messages.Events.Products;
+using DShop.Services.Customers.Repositories;
 using DShop.Services.Customers.ServiceForwarders;
-using DShop.Services.Customers.Services;
 
 namespace DShop.Services.Customers.Handlers.Products
 {
     public class ProductDeletedHandler : IEventHandler<ProductDeleted>
     {
         private readonly IHandler _handler;
-        private readonly IProductsService _productsService;
         private readonly IProductsApi _productsApi;
-        private readonly ICartService _cartService;
+        private readonly ICartsRepository _cartsRepository;
+        private readonly IProductsRepository _productsRepository;
 
         public ProductDeletedHandler(IHandler handler, 
-            IProductsService productsService,
-            ICartService cartService,
-            IProductsApi productsApi)
+            IProductsApi productsApi, 
+            ICartsRepository cartsRepository,
+            IProductsRepository productsRepository)
         {
             _handler = handler;
-            _productsService = productsService;
             _productsApi = productsApi;
-            _cartService = cartService;
+            _cartsRepository = cartsRepository;
+            _productsRepository = productsRepository;
         }
 
         public async Task HandleAsync(ProductDeleted @event, ICorrelationContext context)
             => await _handler.Handle(async () => 
             {
-                var product = await _productsApi.GetAsync(@event.Id);
-                await _productsService.UpdateAsync(product.Id, product.Name, product.Price);
-                await _cartService.HandleDeletedProductAsync(product.Id);
+                await _productsRepository.DeleteAsync(@event.Id);
+                var carts = await _cartsRepository.GetAllWithProduct(@event.Id);
+                foreach (var cart in carts)
+                {
+                    cart.DeleteProduct(@event.Id);
+                }
+                await _cartsRepository.UpdateManyAsync(carts);
             })
             .ExecuteAsync();
     }

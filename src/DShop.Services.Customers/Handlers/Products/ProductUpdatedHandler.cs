@@ -2,35 +2,42 @@ using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
 using DShop.Messages.Events.Products;
+using DShop.Services.Customers.Domain;
+using DShop.Services.Customers.Repositories;
 using DShop.Services.Customers.ServiceForwarders;
-using DShop.Services.Customers.Services;
 
 namespace DShop.Services.Customers.Handlers.Products
 {
     public class ProductUpdatedHandler : IEventHandler<ProductUpdated>
     {
         private readonly IHandler _handler;
-        private readonly IProductsService _productsService;
         private readonly IProductsApi _productsApi;
-        private readonly ICartService _cartService;
+        private readonly ICartsRepository _cartsRepository;
+        private readonly IProductsRepository _productsRepository;
 
         public ProductUpdatedHandler(IHandler handler, 
-            IProductsService productsService,
-            ICartService cartService,
-            IProductsApi productsApi)
+            IProductsApi productsApi, 
+            ICartsRepository cartsRepository,
+            IProductsRepository productsRepository)
         {
             _handler = handler;
-            _productsService = productsService;
             _productsApi = productsApi;
-            _cartService = cartService;
+            _cartsRepository = cartsRepository;
+            _productsRepository = productsRepository;
         }
 
         public async Task HandleAsync(ProductUpdated @event, ICorrelationContext context)
             => await _handler.Handle(async () => 
             {
-                var product = await _productsApi.GetAsync(@event.Id);
-                await _productsService.UpdateAsync(product.Id, product.Name, product.Price);
-                await _cartService.HandleUpdatedProductAsync(product.Id);
+                var productDto = await _productsApi.GetAsync(@event.Id);
+                var product = new Product(productDto.Id, productDto.Name, productDto.Price);
+                await _productsRepository.UpdateAsync(product);
+                var carts = await _cartsRepository.GetAllWithProduct(product.Id);
+                foreach (var cart in carts)
+                {
+                    cart.UpdateProduct(product);
+                }
+                await _cartsRepository.UpdateManyAsync(carts);
             })
             .ExecuteAsync();
     }

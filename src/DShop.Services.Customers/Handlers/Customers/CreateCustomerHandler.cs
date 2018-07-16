@@ -5,30 +5,43 @@ using DShop.Common.RabbitMq;
 using DShop.Common.Types;
 using DShop.Messages.Commands.Customers;
 using DShop.Messages.Events.Customers;
-using DShop.Services.Customers.Services;
+using DShop.Services.Customers.Domain;
+using DShop.Services.Customers.Repositories;
 
 namespace DShop.Services.Customers.Handlers.Customers
 {
     public class CreateCustomerHandler : ICommandHandler<CreateCustomer>
     {
         private readonly IBusPublisher _busPublisher;
-        private readonly ICustomersService _customerService;
+        private readonly ICartsRepository _cartsRepository;
+        private readonly ICustomersRepository _customersRepository;
         private readonly IHandler _handler;
 
         public CreateCustomerHandler(IBusPublisher busPublisher,
-            ICustomersService customerService,
+            ICartsRepository cartsRepository,
+            ICustomersRepository customersRepository,
             IHandler handler)
         {
             _busPublisher = busPublisher;
-            _customerService = customerService;
+            _cartsRepository = cartsRepository;
+            _customersRepository = customersRepository;
             _handler = handler;
         }
 
         public async Task HandleAsync(CreateCustomer command, ICorrelationContext context)
             => await _handler.Handle(async () => 
                 {
-                    await _customerService.CompleteAsync(command.Id, command.FirstName, 
-                        command.LastName, command.Address, command.Country);
+                    var customer = await _customersRepository.GetAsync(command.Id);
+                    if (customer.Completed)
+                    {
+                        throw new DShopException(Codes.CustomerAlreadyCompleted, 
+                            $"Customer account was already completed for user: '{command.Id}'.");
+                    }
+                    customer.Complete(command.FirstName, command.LastName, 
+                        command.Address, command.Country);
+                    await _customersRepository.UpdateAsync(customer);
+                    var cart = new Cart(command.Id);
+                    await _cartsRepository.CreateAsync(cart);
                     await _busPublisher.PublishEventAsync(new CustomerCreated(command.Id), context);
                 })
                 .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
