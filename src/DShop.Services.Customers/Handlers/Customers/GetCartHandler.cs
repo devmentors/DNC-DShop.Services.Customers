@@ -26,7 +26,9 @@ namespace DShop.Services.Customers.Handlers.Customers
                 Items = cart.Items.Select(x => new CartItemDto
                 {
                     ProductId = x.ProductId,
-                    Quantity = x.Quantity
+                    ProductName = x.ProductName,
+                    Quantity = x.Quantity,
+                    UnitPrice = x.UnitPrice
                 })
             };
         }
