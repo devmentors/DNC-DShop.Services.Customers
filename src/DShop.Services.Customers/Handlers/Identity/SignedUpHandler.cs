@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
-using DShop.Messages.Events.Customers;
-using DShop.Messages.Events.Identity;
+using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Domain;
 using DShop.Services.Customers.Repositories;
 
@@ -16,7 +15,7 @@ namespace DShop.Services.Customers.Handlers.Identity
         public SignedUpHandler(IHandler handler, 
             ICustomersRepository customersRepository)
         {
-            _handler = handler;
+            _handler  = handler;
             _customersRepository = customersRepository;
         }
 

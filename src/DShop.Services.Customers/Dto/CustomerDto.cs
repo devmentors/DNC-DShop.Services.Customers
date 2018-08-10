@@ -1,6 +1,6 @@
 using System;
 
-namespace DShop.Services.Customers.Dtos
+namespace DShop.Services.Customers.Dto
 {
     public class CustomerDto
     {

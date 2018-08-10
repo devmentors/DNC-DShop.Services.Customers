@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
-using DShop.Messages.Commands.Customers;
-using DShop.Messages.Events.Customers;
+using DShop.Services.Customers.Messages.Commands;
+using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Repositories;
 
 namespace DShop.Services.Customers.Handlers.Customers
@@ -30,14 +30,14 @@ namespace DShop.Services.Customers.Handlers.Customers
                     var cart = await _cartsRepository.GetAsync(command.CustomerId);
                     cart.DeleteProduct(command.ProductId);
                     await _cartsRepository.UpdateAsync(cart);
-                    await _busPublisher.PublishEventAsync(new ProductDeletedFromCart(command.CustomerId,
+                    await _busPublisher.PublishAsync(new ProductDeletedFromCart(command.CustomerId,
                         command.ProductId), context);
                 })
-                .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
+                .OnDShopError(async ex => await _busPublisher.PublishAsync(
                         new DeleteProductFromCartRejected(command.CustomerId, command.ProductId,
                             ex.Message, ex.Code), context)
                 )    
-                .OnError(async ex => await _busPublisher.PublishEventAsync(
+                .OnError(async ex => await _busPublisher.PublishAsync(
                         new DeleteProductFromCartRejected(command.CustomerId, command.ProductId,
                             ex.Message, string.Empty), context)
                 )

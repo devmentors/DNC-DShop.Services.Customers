@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DShop.Services.Customers.Dtos
+namespace DShop.Services.Customers.Dto
 {
     public class CartDto
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DShop.Messages.Entities;
+using DShop.Common.Types;
 
 namespace DShop.Services.Customers.Domain
 {

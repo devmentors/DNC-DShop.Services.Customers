@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DShop.Common.Handlers;
-using DShop.Services.Customers.Dtos;
+using DShop.Services.Customers.Dto;
 using DShop.Services.Customers.Queries;
 using DShop.Services.Customers.Repositories;
 

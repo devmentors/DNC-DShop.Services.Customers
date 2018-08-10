@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DShop.Services.Customers.Dtos;
+using DShop.Services.Customers.Dto;
 using RestEase;
 
 namespace DShop.Services.Customers.ServiceForwarders

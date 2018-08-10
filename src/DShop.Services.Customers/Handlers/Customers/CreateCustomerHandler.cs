@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
 using DShop.Common.Types;
-using DShop.Messages.Commands.Customers;
-using DShop.Messages.Events.Customers;
+using DShop.Services.Customers.Messages.Commands;
+using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Domain;
 using DShop.Services.Customers.Repositories;
 
@@ -42,12 +42,12 @@ namespace DShop.Services.Customers.Handlers.Customers
                     await _customersRepository.UpdateAsync(customer);
                     var cart = new Cart(command.Id);
                     await _cartsRepository.CreateAsync(cart);
-                    await _busPublisher.PublishEventAsync(new CustomerCreated(command.Id), context);
+                    await _busPublisher.PublishAsync(new CustomerCreated(command.Id), context);
                 })
-                .OnDShopError(async ex => await _busPublisher.PublishEventAsync(
+                .OnDShopError(async ex => await _busPublisher.PublishAsync(
                         new CreateCustomerRejected(command.Id, ex.Message, ex.Code), context)
                 )    
-                .OnError(async ex => await _busPublisher.PublishEventAsync(
+                .OnError(async ex => await _busPublisher.PublishAsync(
                         new CreateCustomerRejected(command.Id, ex.Message, string.Empty), context)
                 )
                 .ExecuteAsync();

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
-using DShop.Messages.Events.Products;
+using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Repositories;
 using DShop.Services.Customers.ServiceForwarders;
 

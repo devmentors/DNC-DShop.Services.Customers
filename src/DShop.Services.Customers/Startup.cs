@@ -7,16 +7,14 @@ using DShop.Common.Mongo;
 using DShop.Common.Mvc;
 using DShop.Common.RabbitMq;
 using DShop.Common.RestEase;
-using DShop.Messages.Commands.Customers;
-using DShop.Messages.Events.Identity;
-using DShop.Messages.Events.Orders;
-using DShop.Messages.Events.Products;
+using DShop.Services.Customers.Messages.Commands;
 using DShop.Services.Customers.Domain;
 using DShop.Services.Customers.ServiceForwarders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using DShop.Services.Customers.Messages.Events;
 
 namespace DShop.Services.Customers
 {
