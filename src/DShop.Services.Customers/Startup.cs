@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DShop.Common.AppMetrics;
 using DShop.Common.Dispatchers;
 using DShop.Common.Mongo;
 using DShop.Common.Mvc;
@@ -30,7 +31,8 @@ namespace DShop.Services.Customers
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddDefaultJsonOptions();
+            services.AddCustomMvc();
+            services.AddAppMetrics();
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
                     .AsImplementedInterfaces();
@@ -54,8 +56,9 @@ namespace DShop.Services.Customers
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseMvc();
+            app.UseAppMetrics(applicationLifetime);
             app.UseErrorHandler();
+            app.UseMvc();
             app.UseRabbitMq()
                 .SubscribeCommand<CreateCustomer>()
                 .SubscribeCommand<AddProductToCart>()
