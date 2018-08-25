@@ -34,6 +34,7 @@ namespace DShop.Services.Customers
         {
             services.AddCustomMvc();
             services.AddConsul();
+            services.RegisterServiceForwarder<IProductsApi>("products-service");
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
                     .AsImplementedInterfaces();
@@ -44,7 +45,6 @@ namespace DShop.Services.Customers
             builder.AddMongoDBRepository<Cart>("Carts");
             builder.AddMongoDBRepository<Customer>("Customers");
             builder.AddMongoDBRepository<Product>("Products");
-            builder.RegisterServiceForwarder<IProductsApi>("products-service");
             Container = builder.Build();
 
             return new AutofacServiceProvider(Container);
