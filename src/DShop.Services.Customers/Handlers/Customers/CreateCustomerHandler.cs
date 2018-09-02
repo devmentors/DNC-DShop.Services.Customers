@@ -44,7 +44,7 @@ namespace DShop.Services.Customers.Handlers.Customers
                     await _cartsRepository.CreateAsync(cart);
                     await _busPublisher.PublishAsync(new CustomerCreated(command.Id), context);
                 })
-                .OnDShopError(async ex => await _busPublisher.PublishAsync(
+                .OnCustomError(async ex => await _busPublisher.PublishAsync(
                         new CreateCustomerRejected(command.Id, ex.Message, ex.Code), context)
                 )    
                 .OnError(async ex => await _busPublisher.PublishAsync(

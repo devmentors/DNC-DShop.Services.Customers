@@ -33,7 +33,7 @@ namespace DShop.Services.Customers.Handlers.Customers
                     await _busPublisher.PublishAsync(new ProductDeletedFromCart(command.CustomerId,
                         command.ProductId), context);
                 })
-                .OnDShopError(async ex => await _busPublisher.PublishAsync(
+                .OnCustomError(async ex => await _busPublisher.PublishAsync(
                         new DeleteProductFromCartRejected(command.CustomerId, command.ProductId,
                             ex.Message, ex.Code), context)
                 )    

@@ -29,7 +29,7 @@ namespace DShop.Services.Customers.Handlers.Customers
                     await _cartsRepository.UpdateAsync(cart);
                     await _busPublisher.PublishAsync(new CartCleared(command.CustomerId), context);
                 })
-                .OnDShopError(async ex => await _busPublisher.PublishAsync(
+                .OnCustomError(async ex => await _busPublisher.PublishAsync(
                         new ClearCartRejected(command.CustomerId, ex.Message, ex.Code), context)
                 )    
                 .OnError(async ex => await _busPublisher.PublishAsync(
