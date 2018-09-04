@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace DShop.Services.Customers.Messages.Events
 {
+    [MessageNamespace("products")]
     public class ProductDeleted : IEvent
     {
         public Guid Id { get; }

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace DShop.Services.Customers.Messages.Events
 {
+    [MessageNamespace("identity")]
     public class SignedUp : IEvent
     {
         public Guid UserId { get; }

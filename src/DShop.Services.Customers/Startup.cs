@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Consul;
+using DShop.Common;
 using DShop.Common.Consul;
 using DShop.Common.Dispatchers;
 using DShop.Common.Mongo;
@@ -38,6 +39,7 @@ namespace DShop.Services.Customers
             services.AddSwaggerDocs();
             services.AddConsul();
             services.AddRedis();
+            services.AddInitializers(typeof(IMongoDbInitializer));
             services.RegisterServiceForwarder<IProductsApi>("products-service");
 
             var builder = new ContainerBuilder();
@@ -57,7 +59,8 @@ namespace DShop.Services.Customers
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
-            IApplicationLifetime applicationLifetime, IConsulClient client)
+            IApplicationLifetime applicationLifetime, IConsulClient client,
+            IStartupInitializer startupInitializer)
         {
             if (env.IsDevelopment() || env.EnvironmentName == "local")
             {
@@ -74,11 +77,11 @@ namespace DShop.Services.Customers
                 .SubscribeCommand<AddProductToCart>()
                 .SubscribeCommand<DeleteProductFromCart>()
                 .SubscribeCommand<ClearCart>()
-                .SubscribeEvent<SignedUp>()
-                .SubscribeEvent<ProductCreated>()
-                .SubscribeEvent<ProductUpdated>()
-                .SubscribeEvent<ProductDeleted>()
-                .SubscribeEvent<OrderCompleted>();
+                .SubscribeEvent<SignedUp>(@namespace: "identity")
+                .SubscribeEvent<ProductCreated>(@namespace: "products")
+                .SubscribeEvent<ProductUpdated>(@namespace: "products")
+                .SubscribeEvent<ProductDeleted>(@namespace: "products")
+                .SubscribeEvent<OrderCompleted>(@namespace: "orders");
 
             var consulServiceId = app.UseConsul();
             applicationLifetime.ApplicationStopped.Register(() => 
@@ -86,6 +89,8 @@ namespace DShop.Services.Customers
                 client.Agent.ServiceDeregister(consulServiceId); 
                 Container.Dispose(); 
             });
+
+            startupInitializer.InitializeAsync();
         }
     }
 }
