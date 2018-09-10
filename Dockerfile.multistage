@@ -1,0 +1,34 @@
+FROM microsoft/dotnet:2.1-sdk AS build-env
+WORKDIR /app
+
+ARG sln=DShop.Services.Customers.sln
+ARG service=src/DShop.Services.Customers
+ARG tests=tests/DShop.Services.Customers.Tests
+ARG configuration=Release
+ARG feed='--source "https://api.nuget.org/v3/index.json" --source "https://www.myget.org/F/dnc-dshop/api/v3/index.json"'
+
+# Copy csproj and restore as distinct layers
+COPY ${sln} ./
+COPY ./${service} ./${service}/
+COPY ./${tests} ./${tests}/
+
+RUN dotnet restore /property:Configuration=${configuration} ${feed}
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish ${service} -c ${configuration} -o out ${feed}
+
+# Build runtime image
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
+WORKDIR /app
+
+ARG service=src/DShop.Services.Customers
+
+COPY --from=build-env /app/${service}/out/ .
+
+ENV ASPNETCORE_URLS http://*:5000
+ENV ASPNETCORE_ENVIRONMENT docker
+
+EXPOSE 5000
+
+ENTRYPOINT dotnet DShop.Services.Customers.dll
