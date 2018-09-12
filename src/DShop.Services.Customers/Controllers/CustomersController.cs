@@ -15,6 +15,6 @@ namespace DShop.Services.Customers.Controllers
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> Get([FromRoute] GetCustomer query)
-            => Single(await QueryAsync<GetCustomer, CustomerDto>(query));
+            => Single(await QueryAsync(query));
     }
 }
