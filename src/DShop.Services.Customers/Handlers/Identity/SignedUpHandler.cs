@@ -23,7 +23,7 @@ namespace DShop.Services.Customers.Handlers.Identity
             => await _handler.Handle(async () => 
                 {
                     var customer = new Customer(@event.UserId, @event.Email);
-                    await _customersRepository.CreateAsync(customer);
+                    await _customersRepository.AddAsync(customer);
                 }).ExecuteAsync();
     }
 }

@@ -5,9 +5,9 @@ namespace DShop.Services.Customers.Domain
 {
     public class Product : IIdentifiable
     {
-        public Guid Id { get; protected set; }
-        public string Name { get; protected set; }
-        public decimal Price { get; protected set; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public decimal Price { get; private set; }
         
         protected Product()
         {

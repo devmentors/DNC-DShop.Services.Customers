@@ -14,7 +14,7 @@ using DShop.Common.RestEase;
 using DShop.Common.Swagger;
 using DShop.Services.Customers.Messages.Commands;
 using DShop.Services.Customers.Domain;
-using DShop.Services.Customers.ServiceForwarders;
+using DShop.Services.Customers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +40,7 @@ namespace DShop.Services.Customers
             services.AddConsul();
             services.AddRedis();
             services.AddInitializers(typeof(IMongoDbInitializer));
-            services.RegisterServiceForwarder<IProductsApi>("products-service");
+            services.RegisterServiceForwarder<IProductsService>("products-service");
 
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())

@@ -3,24 +3,20 @@ using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
 using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Repositories;
-using DShop.Services.Customers.ServiceForwarders;
 
 namespace DShop.Services.Customers.Handlers.Products
 {
     public class ProductDeletedHandler : IEventHandler<ProductDeleted>
     {
         private readonly IHandler _handler;
-        private readonly IProductsApi _productsApi;
         private readonly ICartsRepository _cartsRepository;
         private readonly IProductsRepository _productsRepository;
 
         public ProductDeletedHandler(IHandler handler, 
-            IProductsApi productsApi, 
             ICartsRepository cartsRepository,
             IProductsRepository productsRepository)
         {
             _handler = handler;
-            _productsApi = productsApi;
             _cartsRepository = cartsRepository;
             _productsRepository = productsRepository;
         }

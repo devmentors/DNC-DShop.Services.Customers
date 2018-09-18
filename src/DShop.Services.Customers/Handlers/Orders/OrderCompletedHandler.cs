@@ -3,7 +3,7 @@ using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
 using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Repositories;
-using DShop.Services.Customers.ServiceForwarders;
+using DShop.Services.Customers.Services;
 
 namespace DShop.Services.Customers.Handlers.Products
 {

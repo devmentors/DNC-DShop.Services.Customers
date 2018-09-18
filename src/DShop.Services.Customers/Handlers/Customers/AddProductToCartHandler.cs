@@ -40,13 +40,17 @@ namespace DShop.Services.Customers.Handlers.Customers
                     await _busPublisher.PublishAsync(new ProductAddedToCart(command.CustomerId,
                         command.ProductId, command.Quantity), context);
                 })
+                .OnSuccess(async () =>  await _busPublisher.PublishAsync(
+                    new ProductAddedToCart(command.CustomerId, command.ProductId,
+                        command.Quantity), context)
+                )
                 .OnCustomError(async ex => await _busPublisher.PublishAsync(
                         new AddProductToCartRejected(command.CustomerId, command.ProductId,
                             command.Quantity, ex.Message, ex.Code), context)
                 )    
                 .OnError(async ex => await _busPublisher.PublishAsync(
                         new AddProductToCartRejected(command.CustomerId, command.ProductId,
-                            command.Quantity, ex.Message, string.Empty), context)
+                            command.Quantity, ex.Message, "add_product_from_cart_failed"), context)
                 )
                 .ExecuteAsync();
     }

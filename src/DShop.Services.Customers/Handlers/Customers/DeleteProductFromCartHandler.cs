@@ -30,16 +30,17 @@ namespace DShop.Services.Customers.Handlers.Customers
                     var cart = await _cartsRepository.GetAsync(command.CustomerId);
                     cart.DeleteProduct(command.ProductId);
                     await _cartsRepository.UpdateAsync(cart);
-                    await _busPublisher.PublishAsync(new ProductDeletedFromCart(command.CustomerId,
-                        command.ProductId), context);
                 })
+                .OnSuccess(async () =>  await _busPublisher.PublishAsync(
+                    new ProductDeletedFromCart(command.CustomerId, command.ProductId), context)
+                )
                 .OnCustomError(async ex => await _busPublisher.PublishAsync(
                         new DeleteProductFromCartRejected(command.CustomerId, command.ProductId,
                             ex.Message, ex.Code), context)
                 )    
                 .OnError(async ex => await _busPublisher.PublishAsync(
                         new DeleteProductFromCartRejected(command.CustomerId, command.ProductId,
-                            ex.Message, string.Empty), context)
+                            ex.Message, "delete_product_from_cart_failed"), context)
                 )
                 .ExecuteAsync();
     }

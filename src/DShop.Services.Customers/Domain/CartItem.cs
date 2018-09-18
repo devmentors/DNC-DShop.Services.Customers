@@ -4,10 +4,10 @@ namespace DShop.Services.Customers.Domain
 {
     public class CartItem
     {
-        public Guid ProductId { get; protected set; }
-        public string ProductName { get; protected set; }
-        public decimal UnitPrice { get; protected set; }
-        public int Quantity { get; protected set; }
+        public Guid ProductId { get; private set; }
+        public string ProductName { get; private set; }
+        public decimal UnitPrice { get; private set; }
+        public int Quantity { get; private set; }
         public decimal TotalPrice => Quantity * UnitPrice;
 
         protected CartItem()

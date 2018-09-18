@@ -22,8 +22,8 @@ namespace DShop.Services.Customers.Repositories
         public async Task<IEnumerable<Cart>> GetAllWithProduct(Guid productId)
             => await _repository.FindAsync(x => x.Items.Any(i => i.ProductId == productId));
 
-        public async Task CreateAsync(Cart cart)
-            => await _repository.CreateAsync(cart);
+        public async Task AddAsync(Cart cart)
+            => await _repository.AddAsync(cart);
 
         public async Task UpdateAsync(Cart cart)
             => await _repository.UpdateAsync(cart);

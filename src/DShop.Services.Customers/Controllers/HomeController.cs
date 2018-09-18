@@ -2,9 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DShop.Services.Customers.Controllers
 {
-    public class HomeController : Controller
+    [Route("")]
+    public class HomeController : ControllerBase
     {
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Get() => Ok("DShop Customers Service");
     }
 }

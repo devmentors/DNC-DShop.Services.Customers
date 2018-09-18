@@ -7,7 +7,7 @@ namespace DShop.Services.Customers.Repositories
     public interface IProductsRepository
     {
         Task<Product> GetAsync(Guid id);
-        Task CreateAsync(Product product);
+        Task AddAsync(Product product);
         Task UpdateAsync(Product product);
         Task DeleteAsync(Guid id);
     }

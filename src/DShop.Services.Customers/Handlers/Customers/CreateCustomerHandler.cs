@@ -29,27 +29,34 @@ namespace DShop.Services.Customers.Handlers.Customers
         }
 
         public async Task HandleAsync(CreateCustomer command, ICorrelationContext context)
-            => await _handler.Handle(async () => 
+        {
+            var email = string.Empty;
+            await _handler.Handle(async () => 
+            {
+                var customer = await _customersRepository.GetAsync(command.Id);
+                if (customer.Completed)
                 {
-                    var customer = await _customersRepository.GetAsync(command.Id);
-                    if (customer.Completed)
-                    {
-                        throw new DShopException(Codes.CustomerAlreadyCompleted, 
-                            $"Customer account was already completed for user: '{command.Id}'.");
-                    }
-                    customer.Complete(command.FirstName, command.LastName, 
-                        command.Address, command.Country);
-                    await _customersRepository.UpdateAsync(customer);
-                    var cart = new Cart(command.Id);
-                    await _cartsRepository.CreateAsync(cart);
-                    await _busPublisher.PublishAsync(new CustomerCreated(command.Id), context);
-                })
-                .OnCustomError(async ex => await _busPublisher.PublishAsync(
-                        new CreateCustomerRejected(command.Id, ex.Message, ex.Code), context)
-                )    
-                .OnError(async ex => await _busPublisher.PublishAsync(
-                        new CreateCustomerRejected(command.Id, ex.Message, string.Empty), context)
-                )
-                .ExecuteAsync();
+                    throw new DShopException(Codes.CustomerAlreadyCompleted, 
+                        $"Customer account was already created for user with id: '{command.Id}'.");
+                }
+                customer.Complete(command.FirstName, command.LastName, command.Address, command.Country);
+                await _customersRepository.UpdateAsync(customer);
+                var cart = new Cart(command.Id);
+                await _cartsRepository.AddAsync(cart);
+                email = customer.Email;
+            })
+            .OnSuccess(async () =>  await _busPublisher.PublishAsync(
+                new CustomerCreated(command.Id, email, command.FirstName, 
+                    command.LastName, command.Address, command.Country), context)
+            )
+            .OnCustomError(async ex => await _busPublisher.PublishAsync(
+                    new CreateCustomerRejected(command.Id, ex.Message, ex.Code), context)
+            )    
+            .OnError(async ex => await _busPublisher.PublishAsync(
+                    new CreateCustomerRejected(command.Id, ex.Message, 
+                        "create_customer_failed"), context)
+            )
+            .ExecuteAsync();
+        }
     }
 }

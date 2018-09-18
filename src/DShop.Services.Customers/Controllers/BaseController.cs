@@ -8,7 +8,7 @@ namespace DShop.Services.Customers.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BaseController : Controller
+    public class BaseController : ControllerBase
     {
         private readonly IDispatcher _dispatcher;
 

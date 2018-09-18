@@ -8,8 +8,8 @@ namespace DShop.Services.Customers.Domain
     public class Cart : IIdentifiable
     {
         private ISet<CartItem> _items = new HashSet<CartItem>();
-        public Guid Id { get; protected set; }
-        public DateTime CreatedAt { get; protected set; }
+        public Guid Id { get; private set; }
+        public DateTime CreatedAt { get; private set; }
         public IEnumerable<CartItem> Items
         {
             get => _items;

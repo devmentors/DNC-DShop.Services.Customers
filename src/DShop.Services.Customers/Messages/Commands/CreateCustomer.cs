@@ -13,8 +13,8 @@ namespace DShop.Services.Customers.Messages.Commands
         public string Country { get; }
 
         [JsonConstructor]
-        public CreateCustomer(Guid id, string firstName, string lastName, 
-            string address, string country)
+        public CreateCustomer(Guid id, string firstName, 
+            string lastName, string address, string country)
         {
             Id = id;
             FirstName = firstName;

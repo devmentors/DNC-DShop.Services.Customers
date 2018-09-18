@@ -9,7 +9,7 @@ namespace DShop.Services.Customers.Repositories
     {
         Task<Cart> GetAsync(Guid id);
         Task<IEnumerable<Cart>> GetAllWithProduct(Guid productId);
-        Task CreateAsync(Cart cart);
+        Task AddAsync(Cart cart);
         Task UpdateAsync(Cart cart);
         Task UpdateManyAsync(IEnumerable<Cart> carts);
     }
