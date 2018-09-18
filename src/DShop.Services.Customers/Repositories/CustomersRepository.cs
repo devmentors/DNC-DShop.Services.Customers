@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using DShop.Common.Mongo;
+using DShop.Common.Types;
 using DShop.Services.Customers.Domain;
+using DShop.Services.Customers.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -18,6 +20,9 @@ namespace DShop.Services.Customers.Repositories
 
         public async Task<Customer> GetAsync(Guid id)
             => await _repository.GetAsync(id);
+
+        public async Task<PagedResult<Customer>> BrowseAsync(BrowseCustomers query)
+            => await _repository.BrowseAsync(_ => true, query);
 
         public async Task AddAsync(Customer customer)
             => await _repository.AddAsync(customer);

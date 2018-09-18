@@ -29,5 +29,15 @@ namespace DShop.Services.Customers.Controllers
 
             return Ok(data);
         }
+
+        protected ActionResult<PagedResult<T>> Collection<T>(PagedResult<T> pagedResult)
+        {
+            if (pagedResult == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(pagedResult);
+        }
     }
 }
