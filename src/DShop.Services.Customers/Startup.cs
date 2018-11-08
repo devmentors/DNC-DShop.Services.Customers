@@ -44,7 +44,7 @@ namespace DShop.Services.Customers
 
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
-                    .AsImplementedInterfaces();
+                .AsImplementedInterfaces();
             builder.Populate(services);
             builder.AddDispatchers();
             builder.AddRabbitMq();
@@ -58,7 +58,7 @@ namespace DShop.Services.Customers
             return new AutofacServiceProvider(Container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
             IApplicationLifetime applicationLifetime, IConsulClient client,
             IStartupInitializer startupInitializer)
         {
@@ -66,17 +66,21 @@ namespace DShop.Services.Customers
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseAllForwardedHeaders();
             app.UseSwaggerDocs();
             app.UseErrorHandler();
             app.UseServiceId();
             app.UseMvc();
             app.UseRabbitMq()
-                .SubscribeCommand<CreateCustomer>()
-                .SubscribeCommand<AddProductToCart>()
-                .SubscribeCommand<DeleteProductFromCart>()
-                .SubscribeCommand<ClearCart>()
+                .SubscribeCommand<CreateCustomer>(onError: (c, e) =>
+                    new CreateCustomerRejected(c.Id, e.Message, e.Code))
+                .SubscribeCommand<AddProductToCart>(onError: (c, e) =>
+                    new AddProductToCartRejected(c.CustomerId, c.ProductId, c.Quantity, e.Message, e.Code))
+                .SubscribeCommand<DeleteProductFromCart>(onError: (c, e) =>
+                    new DeleteProductFromCartRejected(c.CustomerId, c.ProductId, e.Message, e.Code))
+                .SubscribeCommand<ClearCart>(onError: (c, e) =>
+                    new ClearCartRejected(c.CustomerId, e.Message, e.Code))
                 .SubscribeEvent<SignedUp>(@namespace: "identity")
                 .SubscribeEvent<ProductCreated>(@namespace: "products")
                 .SubscribeEvent<ProductUpdated>(@namespace: "products")
@@ -84,10 +88,10 @@ namespace DShop.Services.Customers
                 .SubscribeEvent<OrderCompleted>(@namespace: "orders");
 
             var consulServiceId = app.UseConsul();
-            applicationLifetime.ApplicationStopped.Register(() => 
-            { 
-                client.Agent.ServiceDeregister(consulServiceId); 
-                Container.Dispose(); 
+            applicationLifetime.ApplicationStopped.Register(() =>
+            {
+                client.Agent.ServiceDeregister(consulServiceId);
+                Container.Dispose();
             });
 
             startupInitializer.InitializeAsync();
