@@ -85,7 +85,9 @@ namespace DShop.Services.Customers
                 .SubscribeEvent<ProductCreated>(@namespace: "products")
                 .SubscribeEvent<ProductUpdated>(@namespace: "products")
                 .SubscribeEvent<ProductDeleted>(@namespace: "products")
-                .SubscribeEvent<OrderCompleted>(@namespace: "orders");
+                .SubscribeEvent<OrderCreated>(@namespace: "orders")
+                .SubscribeEvent<OrderCompleted>(@namespace: "orders")
+                .SubscribeEvent<OrderCanceled>(@namespace: "orders");
 
             var consulServiceId = app.UseConsul();
             applicationLifetime.ApplicationStopped.Register(() =>

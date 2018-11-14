@@ -1,6 +1,8 @@
+using System.Linq;
 using System.Threading.Tasks;
 using DShop.Common.Handlers;
 using DShop.Common.RabbitMq;
+using DShop.Common.Types;
 using DShop.Services.Customers.Messages.Commands;
 using DShop.Services.Customers.Messages.Events;
 using DShop.Services.Customers.Repositories;

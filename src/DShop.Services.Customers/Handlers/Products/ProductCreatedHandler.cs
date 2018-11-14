@@ -18,7 +18,7 @@ namespace DShop.Services.Customers.Handlers.Products
 
         public async Task HandleAsync(ProductCreated @event, ICorrelationContext context)
         {
-            var product = new Product(@event.Id, @event.Name, @event.Price);
+            var product = new Product(@event.Id, @event.Name, @event.Price, @event.Quantity);
             await _productsRepository.AddAsync(product);
         }
     }

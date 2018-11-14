@@ -6,23 +6,32 @@ using DShop.Services.Customers.Repositories;
 
 namespace DShop.Services.Customers.Handlers.Orders
 {
-    public class OrderCompletedHandler : IEventHandler<OrderCompleted>
+    public class OrderCanceledHandler : IEventHandler<OrderCanceled>
     {
         private readonly ICartsRepository _cartsRepository;
         private readonly IProductsRepository _productsRepository;
 
-        public OrderCompletedHandler(ICartsRepository cartsRepository,
+        public OrderCanceledHandler(ICartsRepository cartsRepository,
             IProductsRepository productsRepository)
         {
             _cartsRepository = cartsRepository;
             _productsRepository = productsRepository;
         }
 
-        public async Task HandleAsync(OrderCompleted @event, ICorrelationContext context)
+        public async Task HandleAsync(OrderCanceled @event, ICorrelationContext context)
         {
             var cart = await _cartsRepository.GetAsync(@event.CustomerId);
-            cart.Clear();
-            await _cartsRepository.UpdateAsync(cart);
+            foreach (var cartItem in cart.Items)
+            {
+                var product = await _productsRepository.GetAsync(cartItem.ProductId);
+                if (product == null)
+                {
+                    continue;
+                }
+
+                product.SetQuantity(product.Quantity + cartItem.Quantity);
+                await _productsRepository.UpdateAsync(product);
+            }
         }
     }
 }

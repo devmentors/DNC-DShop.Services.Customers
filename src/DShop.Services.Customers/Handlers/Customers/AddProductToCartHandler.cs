@@ -25,11 +25,23 @@ namespace DShop.Services.Customers.Handlers.Customers
 
         public async Task HandleAsync(AddProductToCart command, ICorrelationContext context)
         {
+            if (command.Quantity <= 0)
+            {
+                throw new DShopException(Codes.InvalidQuantity,
+                    $"Invalid quantity: '{command.Quantity}'.");
+            }
+
             var product = await _productsRepository.GetAsync(command.ProductId);
             if (product == null)
             {
                 throw new DShopException(Codes.ProductNotFound,
                     $"Product: '{command.ProductId}' was not found.");
+            }
+
+            if (product.Quantity < command.Quantity)
+            {
+                throw new DShopException(Codes.NotEnoughProductsInStock,
+                    $"Not enough products in stock: '{command.ProductId}'.");
             }
 
             var cart = await _cartsRepository.GetAsync(command.CustomerId);

@@ -47,7 +47,8 @@ namespace DShop.Services.Customers.Domain
             var item = GetCartItem(productId);
             if (item == null)
             {
-                return;
+                throw new DShopException("product_not_found",
+                    $"Product with id: '{productId}' was not found.");
             }
             _items.Remove(item);
         }
@@ -57,7 +58,8 @@ namespace DShop.Services.Customers.Domain
             var item = GetCartItem(product.Id);
             if (item == null)
             {
-                return;
+                throw new DShopException("product_not_found",
+                    $"Product with id: '{product.Id}' was not found.");
             }
             item.Update(product);
         }

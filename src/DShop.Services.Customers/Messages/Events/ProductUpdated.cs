@@ -11,15 +11,18 @@ namespace DShop.Services.Customers.Messages.Events
         public string Name { get; }
         public string Description { get; }
         public decimal Price { get; }
+        public int Quantity { get; }
 
         [JsonConstructor]
-        public ProductUpdated(Guid id, string name, 
-            string description, decimal price)
+        public ProductUpdated(Guid id, string name,
+            string description, decimal price,
+            int quantity)
         {
             Id = id;
             Name = name;
             Description = description;
             Price = price;
+            Quantity = quantity;
         }
     }
 }
