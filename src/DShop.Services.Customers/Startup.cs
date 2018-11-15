@@ -85,7 +85,7 @@ namespace DShop.Services.Customers
                 .SubscribeEvent<ProductCreated>(@namespace: "products")
                 .SubscribeEvent<ProductUpdated>(@namespace: "products")
                 .SubscribeEvent<ProductDeleted>(@namespace: "products")
-                .SubscribeEvent<OrderCreated>(@namespace: "orders")
+                .SubscribeEvent<OrderApproved>(@namespace: "orders")
                 .SubscribeEvent<OrderCompleted>(@namespace: "orders")
                 .SubscribeEvent<OrderCanceled>(@namespace: "orders");
 

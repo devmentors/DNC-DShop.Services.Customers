@@ -6,19 +6,19 @@ using DShop.Services.Customers.Repositories;
 
 namespace DShop.Services.Customers.Handlers.Orders
 {
-    public class OrderCreatedHandler : IEventHandler<OrderCreated>
+    public class OrderApprovedHandler : IEventHandler<OrderApproved>
     {
         private readonly ICartsRepository _cartsRepository;
         private readonly IProductsRepository _productsRepository;
 
-        public OrderCreatedHandler(ICartsRepository cartsRepository,
+        public OrderApprovedHandler(ICartsRepository cartsRepository,
             IProductsRepository productsRepository)
         {
             _cartsRepository = cartsRepository;
             _productsRepository = productsRepository;
         }
 
-        public async Task HandleAsync(OrderCreated @event, ICorrelationContext context)
+        public async Task HandleAsync(OrderApproved @event, ICorrelationContext context)
         {
             var cart = await _cartsRepository.GetAsync(@event.CustomerId);
             foreach (var cartItem in cart.Items)
