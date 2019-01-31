@@ -6,6 +6,7 @@ using Consul;
 using DShop.Common;
 using DShop.Common.Consul;
 using DShop.Common.Dispatchers;
+using DShop.Common.Jaeger;
 using DShop.Common.Mongo;
 using DShop.Common.Mvc;
 using DShop.Common.RabbitMq;
@@ -38,6 +39,8 @@ namespace DShop.Services.Customers
             services.AddCustomMvc();
             services.AddSwaggerDocs();
             services.AddConsul();
+            services.AddJaeger();
+            services.AddOpenTracing();
             services.AddRedis();
             services.AddInitializers(typeof(IMongoDbInitializer));
             services.RegisterServiceForwarder<IProductsService>("products-service");
