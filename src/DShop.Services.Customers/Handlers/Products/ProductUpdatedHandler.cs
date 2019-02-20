@@ -25,7 +25,7 @@ namespace DShop.Services.Customers.Handlers.Products
             var product = new Product(@event.Id, @event.Name, @event.Price, @event.Quantity);
             await _productsRepository.UpdateAsync(product);
             var carts = await _cartsRepository.GetAllWithProduct(product.Id)
-                .ContinueWith(t => t.Result.ToList());
+                .ContinueWith(t => t.GetAwaiter().GetResult().ToList());
             foreach (var cart in carts)
             {
                 cart.UpdateProduct(product);

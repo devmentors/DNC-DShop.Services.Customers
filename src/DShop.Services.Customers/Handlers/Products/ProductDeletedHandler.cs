@@ -23,7 +23,7 @@ namespace DShop.Services.Customers.Handlers.Products
         {
             await _productsRepository.DeleteAsync(@event.Id);
             var carts = await _cartsRepository.GetAllWithProduct(@event.Id)
-                .ContinueWith(t => t.Result.ToList());
+                .ContinueWith(t => t.GetAwaiter().GetResult().ToList());
             foreach (var cart in carts)
             {
                 cart.DeleteProduct(@event.Id);
