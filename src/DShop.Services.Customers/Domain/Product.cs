@@ -19,7 +19,7 @@ namespace DShop.Services.Customers.Domain
             Id = id;
             Name = name;
             Price = price;
-            Quantity = quantity;
+            Quantity = SetQuantity(quantity);
         }
 
         public void SetQuantity(int quantity)
